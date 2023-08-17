@@ -433,8 +433,7 @@ def train(config,
                 if log_writer is not None:
                     log_writer.log_metrics(
                         metrics={
-                            "best_{}".format(main_indicator):
-                            best_model_dict[main_indicator]
+                            "best_accuracy": best_model_dict[main_indicator]  # to avoid error when change main_indicator
                         },
                         prefix="EVAL",
                         step=global_step)
