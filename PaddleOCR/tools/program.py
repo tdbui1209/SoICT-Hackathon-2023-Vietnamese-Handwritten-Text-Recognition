@@ -222,7 +222,7 @@ def train(config,
     if not os.path.exists(save_model_dir):
         os.makedirs(save_model_dir)
     main_indicator = eval_class.main_indicator
-    best_model_dict = {main_indicator: 0}
+    best_model_dict = {main_indicator: -10e9}  # to avoid best model not saved if metric under zero
     best_model_dict.update(pre_best_model_dict)
     train_stats = TrainingStats(log_smooth_window, ['lr'])
     model_average = False
