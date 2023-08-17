@@ -26,6 +26,7 @@ import math
 import time
 import traceback
 import paddle
+from tqdm import tqdm
 
 import tools.infer.utility as utility
 from ppocr.postprocess import build_post_process
@@ -657,16 +658,20 @@ def main(args):
             continue
         valid_image_file_list.append(image_file)
         img_list.append(img)
-    try:
-        rec_res, _ = text_recognizer(img_list)
 
-    except Exception as E:
-        logger.info(traceback.format_exc())
-        logger.info(E)
-        exit()
-    for ino in range(len(img_list)):
-        logger.info("Predicts of {}:{}".format(valid_image_file_list[ino],
-                                               rec_res[ino]))
+    for ino in tqdm(range(len(img_list))):
+        try:
+            rec_res, _ = text_recognizer([img_list[ino]])
+            result = "{}\t{}\n".format(valid_image_file_list[ino].split('\\')[-1],
+                                     rec_res[0][0])
+        except Exception as E:
+            print(E)
+            print("error in predicting\t{}".format(valid_image_file_list[ino]))
+            result = "{}\t{}\n".format(valid_image_file_list[ino].split('\\')[-1],
+                                     "a")
+        with open("prediction.txt", "a", encoding="utf-8") as f:
+            f.write(result)
+
     if args.benchmark:
         text_recognizer.autolog.report()
 
