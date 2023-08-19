@@ -26,7 +26,7 @@ for imaeg_path, word in zip(image_path_list, word_list):
     c = Counter(word)
     should_add_to_test = True
     for letter, count in c.items():
-        if train_letter_counts[letter] <= test_letter_counts[letter] * 8:
+        if train_letter_counts[letter] <= (test_letter_counts[letter] + train_letter_counts[letter]) * 0.8:
             should_add_to_test = False
             break
 
